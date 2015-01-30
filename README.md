@@ -12,4 +12,4 @@ cannot detect this dependency, the dependency graph must be specified
 otherwise. First start by building the T4.Generator project, then 
 manually transform the design time unit test template (right click 
 and select run custom tool), after which the VS test runner can be 
-used normally. 
+used normally.
