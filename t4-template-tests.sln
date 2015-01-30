@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T4.Generator", "T4.Generator\T4.Generator.csproj", "{0F3F3829-6CA2-4683-871C-BD77435FF87E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T4.Test", "T4.Test\T4.Test.csproj", "{17621F89-92E1-44C1-B067-CADEED14AA7E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F3F3829-6CA2-4683-871C-BD77435FF87E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F3F3829-6CA2-4683-871C-BD77435FF87E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F3F3829-6CA2-4683-871C-BD77435FF87E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F3F3829-6CA2-4683-871C-BD77435FF87E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17621F89-92E1-44C1-B067-CADEED14AA7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17621F89-92E1-44C1-B067-CADEED14AA7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17621F89-92E1-44C1-B067-CADEED14AA7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17621F89-92E1-44C1-B067-CADEED14AA7E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

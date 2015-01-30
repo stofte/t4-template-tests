@@ -1,0 +1,136 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="$(SolutionDir)\T4.Generator\bin\Debug\T4.Generator.exe" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+    var ClassName = "Foo";
+    // generates a small test instance to be included in the output
+    var doc = new XDocument(
+        new XElement("Items",
+            new XElement("Item",
+                new XElement("Identifier", "1"),
+                new XElement("Name", "A"),
+                new XElement("Description", "A desc"),
+                new XElement("Startdate", "2010-01-01T00:00:00.000"),
+                new XElement("Enddate", "2100-01-01T00:00:00.000")
+                ),
+            new XElement("Item",
+                new XElement("Identifier", "2"),
+                new XElement("Name", "B"),
+                new XElement("Description", "B desc"),
+                new XElement("Startdate", "2010-01-01T00:00:00.000"),
+                new XElement("Enddate", "2100-01-01T00:00:00.000")
+                ),
+            new XElement("Item",
+                new XElement("Identifier", "3"),
+                new XElement("Name", "C"),
+                new XElement("Description", "C desc"),
+                new XElement("Startdate", "2000-01-01T00:00:00.000"),
+                new XElement("Enddate", "2001-01-01T00:00:00.000")
+                )
+            )
+        );
+
+    var cl = new T4.Generator.Basic.Generator();
+    cl.ClassName = ClassName;
+    cl.FilePath = "C:\\path";
+    cl.Model = T4.Generator.Basic.Item.Map(doc);
+    var src = cl.TransformText();
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using NUnit.Framework.Constraints;
+using System.Xml.Linq;
+
+using <#= cl.Namespace#>;
+<#=src#>
+
+namespace CodeList.Test
+{
+    [TestFixture]
+    public class BasicTests
+    {
+        [Test]
+        public void Type_Has_Item_Fields()
+        {
+            Assert.IsNotNull(<#=ClassName#>.A_1);
+            Assert.IsNotNull(<#=ClassName#>.B_2);
+        }
+
+        [Test]
+        public void ToString_Returns_Identifier()
+        {
+            Assert.IsTrue(<#=ClassName#>.A_1.ToString() == "1");
+        }
+
+        [Test]
+        public void Can_Parse_DateTime_Strings()
+        {
+            var mid = new DateTime(2050, 1, 1);
+            Assert.IsTrue(DateTime.Compare(<#=ClassName#>.A_1.StartDate, mid) < 0 && DateTime.Compare(mid, <#=ClassName#>.A_1.EndDate) < 0);
+        }
+
+        [Test]
+        public void Can_New_Known_Instance()
+        {
+            var x =  new <#=ClassName#>("1");
+            Assert.IsTrue(x.Name == "A");
+        }
+
+        [Test]
+        public void Can_New_Unknown_Instances()
+        {
+            var x = new <#=ClassName#>("X");
+            Assert.IsTrue(x.Identifier == "X");
+        }
+
+        [Test]
+        public void Can_Initialize_By_Setting_Identifier()
+        {
+            var x = new <#=ClassName#>();
+            x.Identifier = "1";
+            Assert.IsTrue(x.Name == "A");
+        }
+
+        [Test]
+        public void Can_Cast_String_To_Instance() 
+        {
+            var x =  (<#=ClassName#>) "1";
+            Assert.IsTrue(x.Name == "A");
+        }
+
+        [Test]
+        public void Can_Cast_Instance_To_String()
+        {
+            var x = (string) <#=ClassName#>.A_1;
+            Assert.IsTrue(x == "1");
+        }
+
+        [Test]
+        public void Can_Cast_Null_Instance_To_String()
+        {
+            <#=ClassName#> nully = null;
+            var x = (string) nully;
+            Assert.IsTrue(x == null);
+        }
+
+        [Test]
+        public void Filters_Codes_By_DateTime() 
+        {
+            var x = <#=ClassName#>.AllActiveCodes.Count();
+            Assert.IsTrue(x == 2);
+        }
+
+
+    }
+}

@@ -1,0 +1,7 @@
+*.suo
+*/**/bin
+*/**/obj
+TestResults
+*/**/*.csproj.user
+packages/*
+*.gpState

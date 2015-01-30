@@ -1,0 +1,125 @@
+﻿<#@ template language="C#" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Globalization" #>
+<#@ import namespace="System.Collections.Generic" #>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
+using System.Runtime.Serialization;
+
+namespace <#=Namespace#> {
+
+/// <summary>
+/// Automatically generated from
+/// <#=this.FilePath#>
+/// </summary>
+[DataContract, Serializable]
+public class <#=ClassName#> {
+
+    private string _Identifier;
+
+    [DataMember]
+    public string Name { get; private set; }
+
+    [DataMember]
+    public string Description { get; private set; }
+
+    [DataMember]
+    public DateTime StartDate { get; private set; }
+
+    [DataMember]
+    public DateTime EndDate { get; private set; }
+
+    [DataMember]
+    public string Identifier 
+    { 
+        get
+        {
+            return _Identifier;
+        }
+        set
+        {
+            if (_Identifier != value) {
+                _Identifier = value;
+                SetProperties(this);
+            }
+        }
+    }
+
+    public <#=ClassName#>(string identifier) 
+    {
+        Identifier = identifier;
+    }
+
+    public <#=ClassName#>() { }
+
+    public static implicit operator <#=ClassName#>(string identifier) 
+    {
+        return new <#=ClassName#>(identifier);
+    }
+
+    public static implicit operator string(<#=ClassName#> item) 
+    {
+        return item != null ? item.Identifier : null;
+    }
+
+    public override string ToString()
+    {
+        return Identifier;
+    }
+
+<#
+    foreach(var item in Model) {
+#>
+    /// <summary>
+    /// <#=item.Identifier#> - <#=item.Name#>
+    /// </summary>
+    [NotMapped]
+    public static readonly <#=ClassName#> <#=item.FieldName#> = new <#=ClassName#>("<#=item.Identifier#>");
+
+<#
+    } // for loop
+#>
+
+    [NotMapped]
+    public static readonly IEnumerable<<#=ClassName#>> AllCodes = new <#=ClassName#>[]
+    { 
+        <#= String.Join(",", Model.Select(x => x.FieldName))#> 
+    };
+
+    [NotMapped]
+    public static IEnumerable<<#=ClassName#>> AllActiveCodes
+    {
+        get
+        {
+            return AllCodes.Where(x => x.StartDate <= DateTime.Today && x.EndDate >= DateTime.Today);
+        }
+    }
+
+    private static void SetProperties(<#=ClassName#> obj) 
+    {
+        switch (obj.Identifier) {
+<#
+            foreach(var item in Model) {
+#>
+                case @"<#=item.Identifier#>": 
+                    obj.Name = @"<#=item.Name#>";
+                    obj.Description = @"<#=item.Description#>";
+                    obj.StartDate = DateTime.ParseExact(@"<#=item.Startdate#>", @"<#=DateTimeFormatString#>", CultureInfo.InvariantCulture);
+                    obj.EndDate = DateTime.ParseExact(@"<#=item.Enddate#>", @"<#=DateTimeFormatString#>", CultureInfo.InvariantCulture);
+                    break;
+<#
+            }
+#>
+                default: 
+                    break;
+        }
+    }
+
+
+} // class
+} // namespace
